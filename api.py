@@ -5,7 +5,6 @@ db = SQLAlchemy(app)
 
 #Init ma
 ma = Marshmallow(app)
-api = Api(app)
 
 
 # Product Class/Model
@@ -27,7 +26,7 @@ class Product(db.Model):
 class ProductSchema(ma.Schema):
     class Meta:
         model = Product
-        fields = ('id', 'name', 'price', 'qty')
+        fields = ('id', 'name', 'description','price', 'qty')
 
 # Init schema
 product_schema = ProductSchema()
@@ -45,10 +44,20 @@ def all_products():
 # Create a Product
 @app.route('/product', methods=['POST'])
 def add_product():
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+    name = request.json.get('name')
+    if not name:
+        return make_response({'name':'field can not be empty'})
+
+    description = request.json.get('description')
+    if not description:
+        return make_response({'description':'field can not be empty'})
+    price = request.json.get('price')
+    if not price:
+        return make_response({'price':'field can not be empty'})
+
+    qty = request.json.get('qty')
+    if not qty:
+        return make_response({'qty':'field can not be empty'})
 
     new_product = Product(name, description, price, qty)
 
@@ -68,10 +77,21 @@ def product(id):
 def update_product(id):
     product = Product.query.get_or_404(id)
 
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+    name = request.json.get('name')
+    if not name:
+        return make_response({'name':'field can not be empty'})
+
+    description = request.json.get('description')
+    if not description:
+        return make_response({'description':'field can not be empty'})
+        
+    price = request.json.get('price')
+    if not price:
+        return make_response({'price':'field can not be empty'})
+
+    qty = request.json.get('qty')
+    if not qty:
+        return make_response({'qty':'field can not be empty'})
 
     product.name = name
     product.description = description
